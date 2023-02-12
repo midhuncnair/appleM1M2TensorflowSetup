@@ -1,0 +1,158 @@
+Date: 12 Feb, 2023
+The steps below is a working setup for M1 & M2 mac systems with tensorflow
+
+There is an optional script written to do the below steps
+`mac_setup_utility_script.sh`
+
+
+Steps:
+- install xcode
+    - open app store and search for xcode and install the latest version
+    - Agree to the license by opening the app or by running `sudo xcodebuild -license`
+- install commandline tools
+    - `xcode-select --install`
+- install home brew
+    - /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
+- oh my zsh
+    - /bin/bash -c "$(curl -fsS: https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
+- install iterm
+    - https://iterm2.com/downloads.html
+
+- symlink python3 to python
+    - sudo ln -s /Library/Developer/CommandLineTools/usr/bin/python3 /Library/Developer/CommandLineTools/usr/bin/python
+    - sudo ln -sf /usr/bin/python3 /usr/local/bin/python
+
+    - sudo ln -s /Library/Developer/CommandLineTools/usr/bin/pip3 /Library/Developer/CommandLineTools/usr/bin/pip
+    - sudo ln -sf /usr/bin/pip3 /usr/local/bin/pip
+
+- follow https://github.com/wesbos/Cobalt2-iterm for cobalt2
+
+- setup exports and aliases
+
+- nvm install
+    - /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh)"
+
+    - Node: (https://github.com/nvm-sh/nvm)
+        - nvm ls-remote # to list all the available versions
+        - nvm install node  # to install latest node
+        - nvm install --lts  # to install the latest lts version
+        - nvm install --lts=<lts version name> # to install specific lts version
+        - or: nvm install <version>
+        - nvm ls  # to list all the installed version
+        - nvm use <version> # to use a specific version
+
+- conda tf install for m1/m2
+    Reads:
+        - https://www.anaconda.com/blog/apple-silicon-transition
+        - https://developer.apple.com/metal/tensorflow-plugin/
+    Follow: (from https://developer.apple.com/metal/tensorflow-plugin/)
+        1. download Miniforge script
+            - conda version 4.13.0, python version 3.9.13
+            - Releases:
+                - https://github.com/conda-forge/miniforge/releases?page=2
+                - https://github.com/conda-forge/miniforge/releases/tag/4.13.0-1
+            - Script:
+                - https://github.com/conda-forge/miniforge/releases/download/4.13.0-1/Miniforge3-MacOSX-arm64.sh
+        2. download the above script and make it executable and run the same.
+            - chmod +x Miniforge3-MacOSX-arm64.sh
+            - ./Miniforge3-MacOSX-arm64.sh
+        3. close and open a new terminal
+        4. if you dont want the conda environment to be activated at startup run below
+            - conda config --set auto_activate_base false
+        5. run bellow commands:
+            - conda install -c apple tensorflow-deps
+            - pip install tensorflow-macos==2.9.2
+            - pip install tensorflow-metal==0.5.0
+            - brew install libjpeg
+            - brew install ffmpeg
+        6. from https://github.com/protocolbuffers/protobuf/releases/
+            - download the latest releases for osx-aarch
+                - download path: https://github.com/protocolbuffers/protobuf/releases/download/v22.0-rc3/protoc-22.0-rc-3-osx-aarch_64.zip
+            - unzip to $HOME/protobuf
+            - Edit environment:
+                - add $HOME/protobuf/bin to PATH
+                - add $HOME/protobuf/include as CFLAGS and CPPFLAG
+        7. run the below commands:
+            - conda install cached-property
+            - conda install six
+            - conda install -c conda-forge -y absl-py
+            - conda install -c conda-forge -y astunparse
+            - conda install -c conda-forge -y gast
+            - conda install -c conda-forge -y opt_einsum
+            - conda install -c conda-forge -y termcolor
+            - conda install -c conda-forge -y typing_extensions
+            - conda install -c conda-forge -y wheel
+            - conda install -c conda-forge -y typeguard
+            - pip install wrapt==1.14.1
+            - pip install flatbuffers==1.12
+            - pip install tensorflow_estimator==2.9.0
+            - pip install google_pasta==0.2.0
+            - pip install protobuf==3.19.4
+            - pip install tensorboard==2.9.1
+            - pip install numpy==1.24.1
+            - pip install pandas==1.4.3
+            - pip install keras_preprocessing==1.1.2
+            - conda install -c conda-forge scikit-learn
+            - conda install -y matplotlib jupyterlab
+
+        8. Download latest tensorflow_addons and tensorflow_text wheel files
+            - tensorflow_addons-0.17.1-cp39-cp39-macosx_11_0_arm64, tensorflow_text-2.9.0-cp39-cp39-macosx_11_0_arm64
+            Releases:
+                - https://github.com/sun1638650145/Libraries-and-Extensions-for-TensorFlow-for-Apple-Silicon/releases
+            VersionURL:
+                - https://github.com/sun1638650145/Libraries-and-Extensions-for-TensorFlow-for-Apple-Silicon/releases/tag/v2.9
+
+            WheelPath:
+                - Addon: https://github.com/sun1638650145/Libraries-and-Extensions-for-TensorFlow-for-Apple-Silicon/releases/download/v2.9/tensorflow_addons-0.17.1-cp39-cp39-macosx_11_0_arm64.whl
+                - Text: https://github.com/sun1638650145/Libraries-and-Extensions-for-TensorFlow-for-Apple-Silicon/releases/download/v2.9/tensorflow_text-2.9.0-cp39-cp39-macosx_11_0_arm64.whl
+            - download the wheel files to $HOME/tensorflow_addons/
+            - cd $HOME/tensorflow_addons/
+            - pip install tensorflow_addons-0.17.1-cp39-cp39-macosx_11_0_arm64.whl
+            - pip install tensorflow_text-2.9.0-cp39-cp39-macosx_11_0_arm64.whl
+        9. clone and install the specific version tensorflow-io
+            - git clone https://github.com/tensorflow/io.git
+            - cd io
+            - git checkout tags/v0.26.0 -b v0_26_0
+            - python setup.py -q bdist_wheel
+            - cd dist
+            - pip install --no-deps tensorflow_io-0.26.0-cp39-cp39-macosx_11_0_arm64.whl
+
+        10. install tf_slim
+            - pip install tf_slim==1.1.0
+            - pip install seaborn==0.11.2
+            - pip install statsmodels==0.13.2
+            - pip install opencv-python==4.6.0.66
+            - pip install surprise==0.1
+            - pip install segmentation-models==1.0.1
+            - pip install gensim==4.2.0
+
+        11. additional packages
+            - Port audio:
+                - brew install portaudio
+                    - make sure to get the installation location and add it to environment
+                        - Path, CFLAGS, CPPFLAG, LDFLAGS
+                - pip install PyAudio==0.2.12
+
+            - pip install gym==0.21.0
+            - pip install gym-notices==0.0.8
+            - pip install pybullet==3.2.5
+            - pip install pygame==2.1.2
+            - pip install pyglet==1.5.27
+
+            - pip install stable-baselines3==1.7.0
+            - pip install keras-rl==0.4.2
+
+            - pip install Keras-Applications==1.0.8
+            - pip install nltk==3.7
+
+            - pip install pyspark==3.3.1
+            - pip install python-Levenshtein==0.12.2
+            - pip install wordcloud==1.8.2.2
+            - pip install xgboost==1.6.2
+
+            - pip install yellowbrick==1.5
+
+
+Incase the raw.githubusercontent.com is not assesible follow below:
+    - https://osxdaily.com/2015/06/02/change-dns-command-line-mac-os-x/
+    - Set the dns nameserver to use Google's `networksetup -setdnsservers Wi-Fi 8.8.8.8`
