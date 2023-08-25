@@ -113,6 +113,8 @@ pip install pandas==1.4.3
 pip install keras_preprocessing==1.1.2
 conda install -c conda-forge scikit-learn
 conda install -y matplotlib jupyterlab
+conda install -y tornado==6.1
+conda install -y jupyter-client==7.3.2
 echo "Done"
 
 echo "Installing tensorflow addons and tensorflow text"
