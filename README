@@ -94,6 +94,8 @@ Steps:
             - pip install keras_preprocessing==1.1.2
             - conda install -c conda-forge scikit-learn
             - conda install -y matplotlib jupyterlab
+            - conda install -y tornado==6.1
+            - conda install -y jupyter-client==7.3.2
 
         8. Download latest tensorflow_addons and tensorflow_text wheel files
             - tensorflow_addons-0.17.1-cp39-cp39-macosx_11_0_arm64, tensorflow_text-2.9.0-cp39-cp39-macosx_11_0_arm64
